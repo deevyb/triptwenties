@@ -4,12 +4,9 @@ import React, { Component } from 'react';
 import { SafeAreaView, Text, FlatList, TextInput, View, Button, KeyboardAvoidingView, ScrollView, StyleSheet
  } from 'react-native';
 import { Header } from './Header';
+import * as firebase from 'firebase';
 
 class ToDoList extends Component {
-  static navigationOptions = {
-    title: 'House Tasks',
-  };
-
   constructor(props) {
     super(props);
 
@@ -18,6 +15,38 @@ class ToDoList extends Component {
       taskItem: "",
     };
   }
+
+
+  componentDidUpdate(){
+    setTimeout(() => {
+      let forState1 = [];
+      let forState2 = [];
+      var taskListData = firebase.database().ref("ToDoItemsDB").orderByKey();
+      taskListData.once("value")
+        .then(function(snapshot){
+          snapshot.forEach(function(childSnapshot){
+            forState.push(childSnapshot.key)
+            console.log(childSnapshot.key)
+          })
+        });
+        for (item in forState1) {
+          forState2 = [...forState2, {
+            key: taskList.length,
+            taskItem: item
+          }]
+        }
+        this.state.taskList = forState2;
+
+      }, 100);
+    }
+
+
+
+  static navigationOptions = {
+    title: 'House Tasks',
+  };
+
+
 
   changedText = text => {
     this.setState({taskItem: text})
@@ -28,6 +57,7 @@ class ToDoList extends Component {
       this.setState(
         prevState => {
           let { taskList, taskItem } = prevState;
+
           return {
             taskList: taskList.concat({ key: taskList.length, taskItem: taskItem}),
             taskItem: ""
@@ -35,10 +65,16 @@ class ToDoList extends Component {
         }
       );
       this.textInput.clear();
+
+      firebase.database().ref("ToDoItemsDB/"+this.state.taskItem).push({
+        taskItem: this.state.taskItem
+      });
+
     }
   };
 
-  deleteTask = i => {
+  deleteTask = (i, item) => {
+    firebase.database().ref("ToDoItemsDB").child(item).remove();
     this.setState(
       prevState => {
         let taskList = prevState.taskList.slice();
@@ -48,15 +84,10 @@ class ToDoList extends Component {
     )
   }
 
-  toGroceries = () => {
-
-  }
-
-  render() {
+render() {
     return (
       <SafeAreaView
       >
-
         <Header headerText="Tasks" />
         <View style={styles.hr} />
         <TextInput
@@ -80,7 +111,7 @@ class ToDoList extends Component {
                 </Text>
                 <Button
                 title='delete'
-                onPress={() => this.deleteTask(index)} />
+                onPress={() => this.deleteTask(index, item.taskItem)} />
               </View>
         }
         />
@@ -90,7 +121,6 @@ class ToDoList extends Component {
   }
 
 }
-
 
 const styles = StyleSheet.create({
   container: {
