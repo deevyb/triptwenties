@@ -5,6 +5,7 @@ import Login from './components/Login';
 import SignUp  from './components/SignUp';
 import Main from './components/Main';
 import Balance from './components/Balance';
+import ToDoNav from './components/ToDoNav';
 
 import { createStackNavigator } from 'react-navigation';
 
@@ -14,7 +15,7 @@ export class FirebaseManager extends Component {
     super();
     // Temporary state for debugging
     this.state = {
-      loading: false, 
+      loading: false,
     };
   }
 
@@ -50,11 +51,12 @@ const App = createStackNavigator({
   FirebaseManager: FirebaseManager,
   Login: Login,
   SignUp: SignUp,
-  Main: Main
+  Main: ToDoNav
 },
 {
+  headerMode: 'none',
   initialRouteName: 'FirebaseManager',
+  headerBackTitleVisible: false
 })
 
 export default App;
-
