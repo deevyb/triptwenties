@@ -10,15 +10,13 @@
   },
   "dependencies": {
     "expo": "^31.0.2",
+    "firebase": "^5.5.7",
+    "firebase-app": "0.0.1",
+    "firebase-auth": "^0.1.2",
     "react": "16.5.0",
-    "react-devtools": "^3.4.2",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
-    "react-native-ui-kitten": "^3.1.2",
     "react-navigation": "^2.18.2",
     "tcomb-form-native": "^0.6.20"
-    "expo" "^31.0.0",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"

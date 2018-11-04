@@ -1,13 +1,59 @@
-import React from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
-import TodoView from './src/components/TodoView';
+// Import components
+import React, { Component } from 'react';
+import * as firebase from 'firebase';
+import Login from './components/Login';
+import SignUp  from './components/SignUp';
+import Main from './components/Main';
 
-export default class App extends React.Component {
+import { createStackNavigator } from 'react-navigation';
+
+export class FirebaseManager extends Component {
+
+  constructor() {
+    super();
+    // Temporary state for debugging
+    this.state = {
+      loading: false, 
+    };
+  }
+
+  // App component mounts, checks whether user has been logged
+  // in before, if not, send to log in screen
+  componentDidMount() {
+    var config = {
+      apiKey: "AIzaSyDOWTgWTVtPyslbMQf2HOdvEYzo52481Vw",
+      authDomain: "roommater-f66ed.firebaseapp.com",
+      databaseURL: "https://roommater-f66ed.firebaseio.com",
+      projectId: "roommater-f66ed",
+      storageBucket: "roommater-f66ed.appspot.com",
+      messagingSenderId: "917021886044"
+    };
+    firebase.initializeApp(config);
+  }
+
+  // componentWillUnmount() {
+  //   this.authSubscription();
+  // }
+
   render() {
+    if (this.state.loading) return null;
+
+    // if (this.state.user) return <Main />;
     return (
-      <SafeAreaView>
-      	<TodoView />
-      </SafeAreaView>
-    );
+      <Login navigation={this.props.navigation} />
+    )
   }
 }
+
+const App = createStackNavigator({
+  FirebaseManager: FirebaseManager,
+  Login: Login,
+  SignUp: SignUp,
+  Main: Main
+},
+{
+  initialRouteName: 'FirebaseManager',
+})
+
+export default App;
+
