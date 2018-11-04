@@ -1,40 +1,24 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Button, Alert } from 'react-native';
-import t from 'tcomb-form-native';
-import { RkButton } from 'react-native-ui-kitten';
+import { View, StyleSheet, Alert, Keyboard, Text, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
+import { Button } from 'react-native-elements';
+import styles from "./LoginStyle";
 import * as firebase from 'firebase';
 import Main from './Main';
 
-const Form = t.form.Form;
-
-var options = {
-	fields: {
-		password: {
-			secureTextEntry: true,
-		}
-	}
-}
-
-const User = t.struct({
-	email: t.String,
-	password: t.String,
-});
-
 class Login extends Component {
+	constructor(props) {
+	  super(props);
+	  this.state = { email: '', pass: ''};
+	}
 
 	handleLogin = () => {
-		const formValues = this._form.getValue();	
-		if (!this._form.validate().isValid()) {
-			return;
-		}
-
 		firebase.auth().signOut().then(function() {
 
 		}).catch(function(error) {
 			console.log(error.message);
 		})
 
-		firebase.auth().signInWithEmailAndPassword(formValues.email, formValues.password).catch((error) => {
+		firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pass).catch((error) => {
 			var errorMessage = error.message;
 			Alert.alert(
 				'Login Error!',
@@ -50,43 +34,45 @@ class Login extends Component {
 		}.bind(this))
 	}
 
+	storeEmail = text => {
+		this.setState({email: text})
+		//not 100% sure if text is what the input is called
+	}
+
+	storePass = text => {
+		this.setState({pass: text})
+	}
+
 	render() {
 		const { navigate } = this.props.navigation;
 		return (
-				<View style={styles.container}>
-					<Form 
-						ref= {c => this._form = c}
-						type={User}
-						options={options}
-					/>
+	      <KeyboardAvoidingView style={styles.containerView} behavior="padding">
 
-					<View style={styles.buttons}>
-						<RkButton onPress={this.handleLogin} style={{backgroundColor: 'darkblue'}} contentStyle={{color: 'white'}}>
-							Login!
-						</RkButton>
-						<RkButton onPress={() => navigate('SignUp')} style={{backgroundColor: 'darkred'}} contentStyle={{color: 'white'}}>
-							Sign Up!
-						</RkButton>
-					</View>
-				</View>
-			
-		)
+	      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+	        <View style={styles.loginScreenContainer}>
+	          <View style={styles.loginFormView}>
+	          <Text style={styles.logoText}>Welcome</Text>
+	            <TextInput placeholder="Email" placeholderColor="#c4c3cb" style={styles.loginFormTextInput}
+	            	ref={node => {this.emailInput = node}} onChangeText={this.storeEmail}/>
+	            <TextInput placeholder="Password" placeholderColor="#c4c3cb" style={styles.loginFormTextInput} secureTextEntry={true}
+	            	ref={node => {this.passInput = node}} onChangeText={this.storePass}/>
+	            <Button
+	              buttonStyle={styles.loginButton}
+	              onPress={this.handleLogin}
+	              title="Login"
+	            />
+	            <Button
+	              buttonStyle={styles.signUpButton}
+	              onPress={() => navigate('SignUp')}
+	              title="or Sign Up"
+	              color="#3897f1"
+	            />
+	          </View>
+	        </View>
+	      </TouchableWithoutFeedback>
+	      </KeyboardAvoidingView>
+	    );
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		justifyContent: 'center',
-		marginTop: 50,
-		padding: 20,
-		backgroundColor: '#ffffff',
-	},
-	buttons: {
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-evenly',
-		alignItems: 'stretch'
-	}
-});
 
 export default Login; 
