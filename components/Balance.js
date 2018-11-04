@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, TextInput, View, Image, Dimensions, SafeAreaView, StyleSheet, ScrollView, Button } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
-import { RkButton } from 'react-native-ui-kitten';
+import { AppRegistry, Text, TextInput, View, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
 import t from 'tcomb-form-native';
+import * as firebase from 'firebase';
 
 
 export default class App extends Component {
@@ -51,16 +51,6 @@ class Balances extends Component {
       let chargr = curr.charger;
       let value = curr.amount;
       let index = curr.to;
-
-      if (index in Object.keys(outgoingCharges)) {
-        if (chargr in Object.keys(outgoingCharges[index])) {
-          outgoingCharges[index][chargr] += value;
-        } else {
-          outgoingCharges[index][chargr] = value;
-        }
-      } else {
-        outgoingCharges[index] = {[chargr]: value};
-      }
     }
 
     // let findSum = (arr) => arr.reduce((a,b) => a + b, 0);
@@ -80,34 +70,58 @@ class Balances extends Component {
 
   render() {
     return(
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+      <SafeAreaView style={styles.MainContainer}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <Text style={styles.headerText}>Money Management</Text>
         <Form ref={c => this._form = c} type={charge}/>
         
-        <RkButton onPress={() => this.processInput()} style={{backgroundColor: 'darkblue', borderRadius: 10}} contentStyle={{color: 'white'}}>
-          Add Charges
-        </RkButton>
+        <Button
+          title='Add Charge'
+          onPress={() => this.processInput()}
+          buttonStyle={styles.buttonBlue}
+        />
 
-        <RkButton onPress={() => this.calculate()} style={{backgroundColor: 'mediumvioletred', borderRadius: 10, marginTop: 10}} contentStyle={{color: 'white'}}>
-          Balance!
-        </RkButton>
+        <Button
+          title='Balance Charges!'
+          onPress={() => this.calculate()}
+          buttonStyle={styles.buttonRed}
+        />
 
         <Text> {"\n"} {this.state.chargesPerPerson}</Text>
-
+        <View style={{ height: 60 }} />
+      </KeyboardAvoidingView>
      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
- MainContainer: {
-   flex: 1,
-   margin: 10
-   
- },
- TextStyle:{
-  fontSize : 22,
-  textAlign: 'center'
- }
+  MainContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    margin: 20
+  },
+  TextStyle: {
+    fontSize : 22,
+    textAlign: 'center'
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "700",
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  buttonBlue: {
+    backgroundColor: 'darkblue',
+    borderRadius: 5,
+    height: 45
+  },
+  buttonRed: {
+    backgroundColor: 'mediumvioletred',
+    borderRadius: 5,
+    height: 45,
+    marginTop: 10
+  }
 });
 
 AppRegistry.registerComponent('TT', () => App);
