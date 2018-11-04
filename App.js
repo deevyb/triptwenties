@@ -6,6 +6,7 @@ import SignUp  from './components/SignUp';
 import Main from './components/Main';
 import Balance from './components/Balance';
 import ToDoNav from './components/ToDoNav';
+import Groups from './components/Groups';
 
 import { createStackNavigator } from 'react-navigation';
 
@@ -51,6 +52,7 @@ const App = createStackNavigator({
   FirebaseManager: FirebaseManager,
   Login: Login,
   SignUp: SignUp,
+  Groups: Groups,
   Main: ToDoNav
 },
 {

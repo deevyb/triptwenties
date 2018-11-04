@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Button, Alert } from 'react-native';
+import { Keyboard, Text, TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, View, StyleSheet, Button, Alert } from 'react-native';
 import t from 'tcomb-form-native';
+import { RkCard } from 'react-native-ui-kitten';
+import { withNavigation } from 'react-navigation';
 import * as firebase from 'firebase';
 
 const Form = t.form.Form;
@@ -42,31 +44,36 @@ class SignUp extends Component {
 				{text: 'Ok', onPress: () => console.log('Ok pressed.')},
 			
 			)
+			return;
 		})
 		firebase.auth().onAuthStateChanged(function(user){
 			if (user) {
 				firebase.database().ref('users/'+user.uid).set({
 					username: value.username,
 				})
-				this.props.navigation.goBack();
+				this.props.navigation.navigate('Groups');
 			} else {
-				console.log("what");
+				this.props.navigation.navigate('Groups');
 			}
 		}.bind(this));
 	}
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<Form 
-					ref={c => this._form = c}
-					type={User}
-					options={options}
-				/>
-				<Button
-					title= "Sign Up!"
-					onPress={this.handleSubmit}
-				/>
+			<View flex style={{justifyContent: 'center', alignItems: 'stretch'}}>
+			<RkCard rkType='shadowed' style={{marginLeft: 30, marginRight: 30}} >
+				<View rkCardContent style={styles.container}>
+					<Form 
+						ref={c => this._form = c}
+						type={User}
+						options={options}
+					/>
+					<Button
+						title= "Sign Up!"
+						onPress={this.handleSubmit}
+					/>
+				</View>
+			</RkCard>
 			</View>
 		);
 	}
@@ -77,8 +84,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginTop: 50,
 		padding: 20,
-		backgroundColor: '#ffffff',
 	},
 });
 
-export default SignUp; 
+export default withNavigation(SignUp); 
