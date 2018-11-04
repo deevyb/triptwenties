@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
+import ToDoNav from './ToDoNav';
 
 class Main extends Component {
 
@@ -9,7 +10,7 @@ class Main extends Component {
 
 	render() {
 		return (
-			<Text> Main! </Text>
+			<View />
 		);
 	}
 }
