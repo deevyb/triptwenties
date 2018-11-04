@@ -51,7 +51,7 @@ const App = createStackNavigator({
   FirebaseManager: FirebaseManager,
   Login: Login,
   SignUp: SignUp,
-  ToDoandGroceries: ToDoNav
+  Main: ToDoNav
 },
 {
   headerMode: 'none',
